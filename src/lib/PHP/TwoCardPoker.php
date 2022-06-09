@@ -47,81 +47,105 @@
 */
 
 // 用件定義
-// 引数をプレイヤー毎に分ける
-// カードの強さを決める
-// ハイカード、ペア、ストレートの役判定
+// 持っているカードで一番強いカードを表示
+// プレイヤーの役を表示して強さ比較。high card < pair < straight
+//  0:引き分け, 1:player1勝利:, 2:player2勝利
 
-const CARD = [
-    '2' => 1,
-    '3' => 2,
-    '4' => 3,
-    '5' => 4,
-    '6' => 5,
-    '7' => 6,
-    '8' => 7,
-    '9' => 8,
-    '10' => 9,
-    'J' => 10,
-    'Q' => 11,
-    'K' => 12,
-    'A' => 13,
+const CARD_RANKS = [
+    '2' => 1, 
+    '3' => 2, 
+    '4' => 3, 
+    '5' => 4, 
+    '6' => 5, 
+    '7' => 6, 
+    '8' => 7, 
+    '9' => 8, 
+    '10' => 9, 
+    'J' => 10, 
+    'Q' => 11, 
+    'K' => 12, 
+    'A' => 13, 
 ];
-
-const SUBSTR_FIRST_LENGTH = 1;
-const SUBSTR_FINAL_LENGTH = 2;
+const HIGH_CARD = 'high card';
 const PAIR = 'pair';
 const STRAIGHT = 'straight';
-const HIGH_CARD = 'high card';
-
-const ROLE_RANK = [
+const DRAW = 0;
+const WINNER_PLAYER1 = 1;
+const WINNER_PLAYER2 = 2;
+const ROLE_RANKS = [
     HIGH_CARD => 1,
     PAIR => 2,
     STRAIGHT => 3
 ];
 
-function showDown(string $card1, string $card2, string $card3, string $card4) {
-    $cardArray = changeRank([$card1, $card2, $card3, $card4]);
-    $playerCard = array_chunk($cardArray, 2);
-    // 役の判定
-    $hands = array_map(fn ($playerCard) => judgeHands($playerCard[0], $playerCard[1]), $playerCard);
-    var_dump($hands);
+function showDown(/* player1 */ string $player1Card1, string $player1Card2, /* player2 */  string $player2Card1, string $player2Card2)
+{
+    $cardRanks = changeRankNumber([$player1Card1, $player1Card2, $player2Card1, $player2Card2]);
+    $dividePlayerCard = array_chunk($cardRanks, 2);
+    $playersRole = array_map(fn ($playerCard) =>  playersRoleList($playerCard[0], $playerCard[1]),$dividePlayerCard);
+    $judgeWinner = judgeWinner($playersRole);
 }
 
-// 文字列で受け取った数字をランクに変換
-function changeRank(array $cards) {
-    return array_map(fn ($card) => CARD[substr($card, SUBSTR_FIRST_LENGTH, SUBSTR_FINAL_LENGTH)], $cards);
+function changeRankNumber(array $cards): array
+{
+    return array_map(fn($cards) => CARD_RANKS[substr($cards, 1, 2)], $cards);
 }
 
-// 役の判定
-function judgeHands($card1, $card2) {
-    $hands = HIGH_CARD;
-    $max = max($card1, $card2);
-    $min = min($card1, $card2);
+function playersRoleList(int $card1, int $card2): array
+{
+    $role = HIGH_CARD;
 
     if (isPair($card1, $card2)) {
-        $hands = PAIR;
+        $role = PAIR;
     } elseif (isStraight($card1, $card2)) {
-        $hands = STRAIGHT;
+        $role = STRAIGHT;
+    } else {
+        $role = HIGH_CARD;
     }
 
     return [
-        'name' => $hands,
-        'rank' => ROLE_RANK[$hands],
-        'max' => $max,
-        'min' => $min,
+        'role' => $role,
+        'roleStrong' => ROLE_RANKS[$role],
+        'maxCardRank' => max([$card1, $card2])
     ];
 }
 
-function isPair($card1, $card2) {
+function isPair(int $card1, int $card2): bool
+{
     return $card1 === $card2;
 }
 
-function isStraight($card1, $card2) {
-    return $card1 + 1 === $card2 || $card1 - 1 === $card2 || exceptionStraight($card1, $card2);
+function isStraight(int $card1, int $card2): bool
+{
+    return abs($card1 - $card2) === 1 ;
 }
 
-function exceptionStraight($card1, $card2) {
-    return $card1 === max(CARD) && $card2 === min(CARD);
+function isCheckMax(): bool
+{
+    return max(CARD_RANKS) - min(CARD_RANKS) === 12;
 }
 
-showDown('CK', 'DJ', 'C10', 'H10');
+function judgeWinner($playersRole): array
+{
+    $winner = DRAW;
+
+    if ($playersRole['roleStrong'][0] > $playersRole['roleStrong'][1]) {
+        $winner = WINNER_PLAYER1;
+    } elseif ($playersRole['roleStrong'][0] < $playersRole['roleStrong'][1]) {
+        $winner = WINNER_PLAYER2;
+    } else {
+        $winner = DRAW;
+    }
+    // 役が同じ場合数字の大きい者が勝者
+    if ($playersRole['role'][0] === $playersRole['role'][1]) {
+        
+    }
+
+    return [
+        $playersRole['role'][0],
+        $playersRole['role'][1],
+        $winner
+    ];
+}
+
+showDown('CK', 'D9', 'CA', 'HA');

@@ -2,7 +2,7 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once(__DIR__ . '/../lib/TwoCardPoker.php');
+require_once(__DIR__ . '/../lib/PHP/TwoCardPoker.php');
 
 class TwoCardPokerTest extends TestCase
 {
