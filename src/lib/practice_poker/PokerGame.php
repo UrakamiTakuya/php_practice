@@ -2,12 +2,12 @@
 
 class PokerGame
 {
-    public function __construct(private array $cards)
+    public function __construct(private array $cards1, private array $cards2)
     {
     }
 
-    public function start()
+    public function start(): array
     {
-        return $this->cards;
+        return [$this->cards1, $this->cards2];
     }
 }
