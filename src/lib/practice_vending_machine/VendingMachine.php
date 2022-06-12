@@ -1,5 +1,7 @@
 <?php
 
+require_once('Item.php');
+
 class VendingMachine
 {
     private int $currentCoin = 0;
@@ -18,11 +20,11 @@ class VendingMachine
         }
     }
 
-    public function pressButton(): string
+    public function pressButton(Item $item): string
     {
-        if ($this->currentCoin === self::DEPOSIT_COIN) {
-            $this->currentCoin = 0;
-            return 'cider';
+        if ($this->currentCoin >= $item->getItemMoney()) {
+            $this->currentCoin -= $item->getItemMoney();
+            return $item->getItem();
         } else {
             return '';
         }
@@ -30,4 +32,4 @@ class VendingMachine
 }
 $v = new VendingMachine();
 var_dump($v->depositCoin(100));
-var_dump($v->pressButton());
+var_dump($v->pressButton(new Item('cola')));
