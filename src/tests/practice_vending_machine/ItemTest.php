@@ -2,6 +2,8 @@
 
 use PHPUnit\Framework\TestCase;
 require_once(__DIR__ . '/../../lib/practice_vending_machine/Item.php');
+require_once('DrinkTest.php');
+require_once('CupDrinkTest.php');
 
 class ItemTest extends TestCase
 {

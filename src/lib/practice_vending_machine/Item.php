@@ -1,22 +1,14 @@
 <?php
 
-class Item 
-{
-    private const Items = [
-        'cider' => 100,
-        'cola' => 150
-    ];
+require_once('Drink.php');
+require_once('CupDrink.php');
 
+abstract class Item 
+{
     public function __construct(private string $item)
     {}
 
-    public function getItem(): string
-    {
-        return $this->item;
-    }
-
-    public function getItemMoney(): int
-    {
-        return $this::Items[$this->item];
-    }
+    public abstract function getItem();
+    public abstract function getItemMoney();
+    public abstract function getCup();
 }
