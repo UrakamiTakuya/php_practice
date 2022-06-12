@@ -1,38 +1,25 @@
 <?php
-// 最初の文字列を削除
-// カードをランクに変換
+
 class HandEvaluator
 {
-    private const CARD_RANKS = [
-        '2' => 1, 
-        '3' => 2, 
-        '4' => 3, 
-        '5' => 4, 
-        '6' => 5, 
-        '7' => 6, 
-        '8' => 7, 
-        '9' => 8, 
-        '10' => 9, 
-        'J' => 10, 
-        'Q' => 11, 
-        'K' => 12, 
-        'A' => 13, 
-    ];
-    private const SLICE_STANDARD_LENGTH = 1;
-    private const SLICE_LENGTH = 2;
+    private const HIGH_CARD = 'high card';
+    private const STRAIGHT = 'straight';
+    private const PAIR = 'pair';
 
-    public function __construct(private array $cards1, private array $cards2)
-    {
-    }
+    public function __construct(public int $card1, public int $card2)
+    {}
 
-    public function changeRank(): array
+    public function changeRole(): string
     {
-        $cardRankLists = [];
-        foreach([$this->cards1, $this->cards2] as $card) {
-            $cardRankLists[] = array_map(fn ($card) => $this::CARD_RANKS[substr($card, $this::SLICE_STANDARD_LENGTH, $this::SLICE_LENGTH)], $card);
+        $role = self::HIGH_CARD;
+
+        if (isStraight($this->card1, $this->card2)) {
+            $role = self::STRAIGHT;
+        } elseif (isPair($this->card1, $this->card2)) {
+            $role = self::PAIR;
+        } else {
+            $role = self::HIGH_CARD;
         }
-        return $cardRankLists;
+        return $role;
     }
 }
-$handEvaluator = new HandEvaluator(['CA', 'DA'], ['C10', 'H4']);
-var_dump($handEvaluator->changeRank());

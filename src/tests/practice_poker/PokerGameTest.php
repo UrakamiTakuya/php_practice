@@ -11,6 +11,6 @@ class PokerGameTest extends TestCase
     {
         // 与えられたカードのランクを返すようにします
         $game = new PokerGame(['CA', 'DA'], ['C10', 'H4']);
-        $this->assertSame([[13, 13], [9, 3]], $game->start());
+        $this->assertSame(['pair', 'high card'], $game->start());
     }
 }
