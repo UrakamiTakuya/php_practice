@@ -9,8 +9,7 @@ class PokerGameTest extends TestCase
 {
     function testStart()
     {
-        // 与えられたカードのランクを返すようにします
-        $game = new PokerGame(['CA', 'DA'], ['C10', 'H4']);
-        $this->assertSame(['pair', 'high card'], $game->start());
+        $game = new PokerGame(['CA', 'DA'], ['C9', 'H10']);
+        $this->assertSame(['pair', 'straight'], $game->start());
     }
 }

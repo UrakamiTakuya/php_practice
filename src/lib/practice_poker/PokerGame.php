@@ -17,11 +17,10 @@ class PokerGame
             $pokerCards = array_map(fn ($card) => new PokerCard($card) ,$card);
             $player = new PokerPlayer($pokerCards);
             $cardRanks = $player->getRank();
-            $cardRankLists[] = $cardRanks;
-            var_dump($cardRanks);
+            $hand = new HandEvaluator($cardRanks);
+            $cardRankLists[] = $hand->changeRole();
         }
-        $handEvaluator = array_map(fn ($cardRankList) => new HandEvaluator($cardRankList[0], $cardRankList[1]), $cardRankLists);
-
+        var_dump($cardRankLists);
         return $cardRankLists;
     }
 }
