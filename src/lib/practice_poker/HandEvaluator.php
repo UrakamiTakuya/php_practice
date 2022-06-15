@@ -8,16 +8,17 @@ class HandEvaluator
     private const STRAIGHT = 'straight';
     private const PAIR = 'pair';
 
-    public function __construct(public array $cards)
+    public function __construct()
     {}
 
-    public function changeRole()
+    public function changeRole(array $pokerCards): string
     {
+        $cards = array_map(fn ($cardRank) => $cardRank->changeRank(), $pokerCards);
         $role = $this::HIGH_CARD;
 
-        if (self::isStraight($this->cards[0], $this->cards[1])) {
+        if (self::isStraight($cards[0], $cards[1])) {
             $role = $this::STRAIGHT;
-        } elseif (self::isPair($this->cards[0], $this->cards[1])) {
+        } elseif (self::isPair($cards[0], $cards[1])) {
             $role = $this::PAIR;
         } else {
             $role = $this::HIGH_CARD;
