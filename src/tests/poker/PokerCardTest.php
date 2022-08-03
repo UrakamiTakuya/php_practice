@@ -2,13 +2,15 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once(__DIR__ . '/../../lib/poker/PokerCard.php');
+use function PHPUnit\Framework\assertSame;
+
+require_once(__DIR__ . '/../../lib/PHP/poker/PokerCard.php');
 
 class PokerCardTest extends TestCase
 {
-    public function testGetRank()
+    public function testStart()
     {
-        $card = new PokerCard('C10');
-        $this->assertSame(9, $card->getRank());
+        $card = new PokerCard('CA');
+        assertSame(13, $card->getRank());
     }
 }
